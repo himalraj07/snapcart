@@ -36,6 +36,7 @@ function Login() {
         email,
         password,
       });
+      router.push("/");
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -122,13 +123,13 @@ function Login() {
         </div>
 
         {/* Google Sign-In */}
-        <button
+        <div
           className="w-full flex items-center justify-center gap-3 border border-gray-300 hover:bg-gray-50 py-3 rounded-xl text-gray-700 font-medium transition-all duration-200 cursor-pointer"
-          onClick={() => signIn("google")}
+          onClick={() => signIn("google", { callbackUrl: "/" })}
         >
           <Image src={googleImage} width={20} height={20} alt="google" />
           Continue with Google
-        </button>
+        </div>
       </motion.form>
 
       <p
