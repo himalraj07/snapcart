@@ -1,32 +1,35 @@
-'use client'
-import React, { useState } from 'react'
-import { motion } from 'motion/react';
-import { ArrowRight, Bike, User, UserCog } from 'lucide-react';
-import axios from 'axios';
-import { redirect } from 'next/navigation';
+"use client";
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import { ArrowRight, Bike, User, UserCog } from "lucide-react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function EditRoleMobile() {
   const [roles, setRoles] = useState([
-    {id:"admin",label:"Admin",icon:UserCog},
-    {id:"user",label:"User",icon:User},
-    {id:"deliveryBoy",label:"Delivery Boy",icon:Bike},
-    
-  ])
+    { id: "admin", label: "Admin", icon: UserCog },
+    { id: "user", label: "User", icon: User },
+    { id: "deliveryBoy", label: "Delivery Boy", icon: Bike },
+  ]);
   const [selectedRole, setSelectedRole] = useState("");
   const [mobile, setMobile] = useState("");
+  const {update,data}=useSession();
+  const router = useRouter();
 
-  const handleEdit = async () => { 
+  const handleEdit = async () => {
     try {
-      const result = await axios.post('/api/user/edit-role-mobile', {
+      const result = await axios.post("/api/user/edit-role-mobile", {
         role: selectedRole,
-        mobile
-      })
-      redirect('/');
+        mobile,
+      });
+      await update({role: selectedRole});
+      router.push("/");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-  
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen p-6 w-full">
       <motion.h1
@@ -62,26 +65,32 @@ function EditRoleMobile() {
 
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{  opacity: 1 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.6 }}
-        className='flex flex-col items-center mt-10'
+        className="flex flex-col items-center mt-10"
       >
-        <label htmlFor="mobile" className='text-gray-700 font-medium mb-2'>Enter Your Mobile No.</label>
-        <input type="tel" id="mobile" className='w-64 md:w-80 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800' placeholder="eg. 9800000000"
-          onChange={(e)=>setMobile(e.target.value)}
+        <label htmlFor="mobile" className="text-gray-700 font-medium mb-2">
+          Enter Your Mobile No.
+        </label>
+        <input
+          type="tel"
+          id="mobile"
+          className="w-64 md:w-80 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800"
+          placeholder="eg. 9800000000"
+          onChange={(e) => setMobile(e.target.value)}
         />
       </motion.div>
 
       <motion.button
-          initial={{ opacity: 0,y: 20,}}
-        animate={{  opacity: 1 , y: 0,}}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        disabled={mobile.length!==10 || !selectedRole}
+        disabled={mobile.length !== 10 || !selectedRole}
         className={`inline-flex items-center gap-2 font-semibold py-3 px-8 rounded-2xl shadow-md transition-all duration-200 w-[200px] mt-20 ${
           selectedRole && mobile.length === 10
-          ? "bg-green-600 hover:bg-green-700 cursor-pointer text-white"
-          : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
+            ? "bg-green-600 hover:bg-green-700 cursor-pointer text-white"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
         onClick={handleEdit}
       >
         Go to Home
@@ -91,4 +100,4 @@ function EditRoleMobile() {
   );
 }
 
-export default EditRoleMobile
+export default EditRoleMobile;
