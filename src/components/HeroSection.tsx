@@ -5,8 +5,6 @@ import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import Image from 'next/image'
 
-
-
 function HeroSection() {
   
   const slides = [
